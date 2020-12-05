@@ -1,0 +1,117 @@
+Attribute VB_Name = "Module3"
+Sub StockScript()
+
+Dim Ticker As String
+Dim Vol As Double
+Dim T_YrOpen As Double
+Dim T_YrClose As Double
+Dim Yr_Change As Double
+Dim T_Change As Double
+Dim Table As Integer
+Dim YrChangelastRow As Double
+
+Dim MaxPercInc, MaxPercDec, MaxVol As Double
+Dim MaxPercInc_T, MaxPercDec_T, MaxVol_T As String
+
+For Each ws In Worksheets
+
+Vol = 0
+T_YrOpen = 0
+T_YrClose = 0
+Table = 2
+MaxPercInc = 0
+MaxPercDec = 0
+MaxVol = 0
+
+ws.Range("I1").Value = "Ticker"
+ws.Range("J1").Value = "Yearly_Change"
+ws.Range("K1").Value = "Percent_Change"
+ws.Range("L1").Value = "Total Volume"
+
+ws.Range("O2").Value = "Greatest_Percent_Inc"
+ws.Range("O3").Value = "Greatest_Percent_Dec"
+ws.Range("O4").Value = "Greatest_Total_Vol"
+ws.Range("P1").Value = "Ticker"
+ws.Range("Q1").Value = "Value"
+
+LastRowSheet = ws.Cells(Rows.Count, "A").End(xlUp).Row
+
+For i = 2 To LastRowSheet
+
+If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+    Ticker = ws.Cells(i, 1).Value
+    T_YrClose = ws.Cells(i, 6).Value
+    ws.Range("I" & Table).Value = Ticker
+    
+    Vol = Vol + ws.Cells(i, 7).Value
+    
+    Yr_Change = T_YrClose - T_YrOpen
+    ws.Range("J" & Table).Value = Yr_Change
+    
+    
+    If T_YrOpen = 0 Then
+        T_Change = 0
+    Else
+        T_Change = Yr_Change / T_YrOpen
+    End If
+    
+ws.Range("K" & Table).Value = T_Change
+ws.Range("K" & Table).NumberFormat = "0.00%"
+
+ws.Range("L" & Table).Value = Vol
+
+Table = Table + 1
+    
+Vol = 0
+T_YrOpen = 0
+T_YrClose = 0
+    
+Else
+    
+    If T_YrOpen = 0 Then
+        T_YrOpen = ws.Cells(i, 3).Value
+        End If
+        Vol = Vol + ws.Cells(i, 7).Value
+        
+    End If
+
+Next i
+
+YrChangelastRow = ws.Cells(Rows.Count, "J").End(xlUp).Row
+
+For x = 2 To YrChangelastRow
+    If ws.Cells(x, 10).Value >= 0 Then
+    
+    ws.Cells(x, 10).Interior.Color = RGB(0, 255, 0)
+    
+    Else
+    
+    ws.Cells(x, 10).Interior.Color = RGB(255, 0, 0)
+    
+ End If
+ 
+ Next x
+ 
+Next ws
+
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
